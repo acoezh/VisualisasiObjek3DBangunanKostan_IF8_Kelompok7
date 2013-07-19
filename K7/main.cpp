@@ -1,7 +1,7 @@
 /* 
-	kelompok 7
-	Ahmad kosasih	10109349
-	Rizki Fauzan	10109316
+	Kelompok 7
+	Ahmad Kosasih	10109349
+	Rizki Fauzan	10109318
 	Diandra Osakina	10109358
 */
 
