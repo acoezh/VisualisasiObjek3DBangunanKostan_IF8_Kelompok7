@@ -1,3 +1,13 @@
+/* 
+	kelompok 7
+	Ahmad kosasih	10109349
+	Rizki Fauzan	10109316
+	Diandra Osakina	10109358
+*/
+
+
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -1183,14 +1193,14 @@ rumah();
 glPopMatrix();
 
 //rumah 4
-/*
+
 glPushMatrix();
 glTranslatef(-140,5,-10); 
 glScalef(5, 5, 5);
 //glBindTexture(GL_TEXTURE_2D, texture[0]);
 rumah();
 glPopMatrix();
-*/
+
 
 //rumah 5
 /*
@@ -1693,7 +1703,7 @@ glPopMatrix();
 	glRotated(1, 0, 0, 0);
 	glDisable(GL_BLEND);
     glutSwapBuffers();//buffeer ke memory
-	glFlush();//memaksa untuk menampilkan
+	glFlush();//memaksakan untuk menampilkan
 	rot++;
 	angle++;
 //glDisable(GL_COLOR_MATERIAL);
