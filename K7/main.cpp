@@ -36,8 +36,8 @@ static int viewy = 40;
 static int viewz =160;
 
 float rot = 0;
-
-GLuint texture[1]; //array untuk texture
+char * Tekstur[] = {"teksturRumput.bmp", "teksturJalan.bmp", "teksturDaun.bmp"}; //file tekstur
+GLuint texture[3]; //array untuk texture
 
 struct Images {//tempat image
 	unsigned long sizeX;
@@ -306,7 +306,7 @@ int ImageLoad(char *filename, Images *image) {
 
 
 //mengambil tekstur
-Images * loadTexture() {
+Images * loadTexture(char* filename) {
 	Images *image1;
 	// alokasi memmory untuk tekstur
 	image1 = (Images *) malloc(sizeof(Images));
@@ -315,7 +315,7 @@ Images * loadTexture() {
 		exit(0);
 	}
 	//pic.bmp is a 64x64 picture
-	if (!ImageLoad("kayu.bmp", image1)) {
+	if (!ImageLoad(filename, image1)) {
 		exit(1);
 	}
 	return image1;
@@ -1031,12 +1031,15 @@ gluCylinder(pObj, 0.6, 0.1, 15, 25, 25);
 glPopMatrix();
 
 //daun
+glEnable(GL_TEXTURE_2D);
 glPushMatrix();
 glColor3ub(18,118,13);
+glBindTexture(GL_TEXTURE_2D, texture[2]);
 glScaled(5, 5, 5);
 glTranslatef(0,7,3);
 glutSolidDodecahedron();
 glPopMatrix();
+glDisable(GL_TEXTURE_2D);
 }
 
 
@@ -1144,23 +1147,26 @@ void display(void){
     glPushMatrix();
     drawScene();
     glPopMatrix();
+	glEnable(GL_TEXTURE_2D);
     
     glPushMatrix();
 
-	glBindTexture(GL_TEXTURE_2D, texture[1]); //untuk mmanggil texture
+	glBindTexture(GL_TEXTURE_2D, texture[0]); //untuk mmanggil texture
 	//drawSceneTanah(_terrain, 0.804f, 0.53999999f, 0.296f);
 	drawSceneTanah(_terrain, 0.3f, 0.53999999f, 0.0654f);
 	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
 
+	glEnable(GL_TEXTURE_2D);
 	glPushMatrix();
-        
-        drawSceneTanah(_terrainJalan, 0.4902f, 0.4683f,0.4594f);
-        glPopMatrix();
-	
+    glBindTexture(GL_TEXTURE_2D, texture[1]); //untuk mmanggil texture
+    drawSceneTanah(_terrainJalan, 0.4902f, 0.4683f,0.4594f);
+    glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
+
 	glPushMatrix();
 	drawSceneTanah(_terrainAir, 0.0f, 0.2f, 0.5f);
 	glPopMatrix();
-        
 
 	glPushMatrix();
 
@@ -1168,69 +1174,17 @@ void display(void){
 	drawSceneTanah(_terrainTanah, 0.7f, 0.2f, 0.1f);
 	glPopMatrix();
 
-//rumah 1
-glPushMatrix();
-glTranslatef(0,5,-10); 
-glScalef(5, 5, 5);
-//glBindTexture(GL_TEXTURE_2D, texture[0]);
-rumah();
-glPopMatrix();
+for (int i=0; i< 3; i++)
+{
+	//rumah 
+	glPushMatrix();
+	glTranslatef(-70 * i, 5, -10); 
+	glScalef(5, 5, 5);
+	//glBindTexture(GL_TEXTURE_2D, texture[0]);
+	rumah();
+	glPopMatrix();
+}
 
-//rumah 2
-glPushMatrix();
-glTranslatef(-35,5,-10); 
-glScalef(5, 5, 5);
-//glBindTexture(GL_TEXTURE_2D, texture[0]);
-rumah();
-glPopMatrix();
-
-//rumah 3
-glPushMatrix();
-glTranslatef(-70,5,-10); 
-glScalef(5, 5, 5);
-//glBindTexture(GL_TEXTURE_2D, texture[0]);
-rumah();
-glPopMatrix();
-
-//rumah 4
-
-glPushMatrix();
-glTranslatef(-140,5,-10); 
-glScalef(5, 5, 5);
-//glBindTexture(GL_TEXTURE_2D, texture[0]);
-rumah();
-glPopMatrix();
-
-
-//rumah 5
-/*
-glPushMatrix();
-glTranslatef(-105,5,-10); 
-glScalef(5, 5, 5);
-//glBindTexture(GL_TEXTURE_2D, texture[0]);
-rumah();
-glPopMatrix();
-*/
-
-//rumah 6
-/*
-glPushMatrix();
-glTranslatef(-175,5,-10); 
-glScalef(5, 5, 5);
-//glBindTexture(GL_TEXTURE_2D, texture[0]);
-rumah();
-glPopMatrix();
-*/
-
-//rumah 7
-/*
-glPushMatrix();
-glTranslatef(-210,5,-10); 
-glScalef(5, 5, 5);
-//glBindTexture(GL_TEXTURE_2D, texture[0]);
-rumah();
-glPopMatrix();
-*/
 
 //pohon2
 
@@ -1239,7 +1193,6 @@ glTranslatef(35,0.5,-10);
 glScalef(0.5, 0.5, 0.5);
 glRotatef(90,0,1,0);
 pohon();
-
 
 //ranting1
 ranting();
@@ -1740,26 +1693,30 @@ glEnable(GL_TEXTURE_GEN_T);
 	_terrainTanah = loadTerrain("ketinggianTanah.bmp", 20);
         
 	//binding texture
+glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	// Generate texture/ membuat texture
+	glGenTextures(1, texture);
+	
+for (int i = 0; i < 3; i++)
+{
+	Images *image1 = loadTexture(Tekstur[i]);
 
-Images *image1 = loadTexture();
-
-if (image1 == NULL) {
+	if (image1 == NULL) {
 		printf("Image was not returned from loadTexture\n");
 		exit(0);
 	}
 	
-glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	// Generate texture/ membuat texture
-	glGenTextures(1, texture);
-//------------tekstur rumah---------------
+//------------tekstur rumput---------------
 	//binding texture untuk membuat texture 2D
-	glBindTexture(GL_TEXTURE_2D, texture[0]);
+	glBindTexture(GL_TEXTURE_2D, texture[i]);
 	//menyesuaikan ukuran textur ketika image lebih besar dari texture
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); //
 	//menyesuaikan ukuran textur ketika image lebih kecil dari texture
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); //
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, image1->sizeX, image1->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, image1->data);
- // texture
+ // -- end texture
+}
+
 }
 
 void reshape(int w, int h){
